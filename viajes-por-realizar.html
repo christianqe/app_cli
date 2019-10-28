@@ -8,9 +8,10 @@
 	<link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
 	<link rel="stylesheet" type="text/css" href="assets/css/bootstrap-better-nav.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/fontawesome/css/font-awesome.min.css">
 </head>
 <body class="" style="background: #EEEEEF;">
-
+    <div id="loading"><div id="msg"><i class="fa fa-circle-o-notch fa-spin"></i></div></div>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="mainNav">
         <div class="container">
@@ -29,7 +30,7 @@
                         <a class="nav-link px-md-3" href="viajes-realizados.html">Viajes Realizados</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-md-3" href="index.html">Salir</a>
+                        <a class="nav-link px-md-3 singout" href="#">Salir</a>
                     </li>
                 </ul>
             </div>
@@ -49,48 +50,7 @@
 
     <section id="">
         <div class="container">
-            <div class="row">
-                <div class="col-md" style="margin-bottom: 20px;">
-                    <div class="card card_cli_pendient">
-                        <div class="card-body">
-                            <a href="detalle-viaje.html" class="">
-                                <h5 class="card-title">Nro Orden:  19/61003934</h5>
-                                <p class="card-text"><b>Cliente</b>: SUMMIT AGRO SOUTH AMERICA SPA, SUCURSAL PERU</p>
-                                <p class="card-text"><b>Fe. Hr. Entrega</b>: 19/07/2019 10:00 AM</p>
-                                <p class="card-text"><b>P. Partida:</b> FARGOLINE SOCIEDAD ANONIMA</p>
-                                <p class="card-text"><b>P. Llegada:</b> UNITRADE</p>    
-                            </a>                        
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md" style="margin-bottom: 20px;">
-                    <div class="card card_cli_pendient">
-                        <div class="card-body">
-                            <a href="detalle-viaje.html" class="">
-                                <h5 class="card-title">Nro Orden:  19/61003927</h5>
-                                <p class="card-text"><b>Cliente</b>: IXOM PERU S.A.C.</p>
-                                <p class="card-text"><b>Fe. Hr. Entrega</b>: 20/07/2019 12:00 AM</p>
-                                <p class="card-text"><b>P. Partida:</b> DP WORLD CALLAO SRL</p>
-                                <p class="card-text"><b>P. Llegada:</b> DEPSA</p>    
-                            </a>                        
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md" style="margin-bottom: 20px;">
-                    <div class="card card_cli_pendient">
-                        <div class="card-body">
-                            <a href="detalle-viaje.html" class="">
-                                <h5 class="card-title">Nro Orden:  19/61003920</h5>
-                                <p class="card-text"><b>Cliente</b>: DATACONT S.A.C.</p>
-                                <p class="card-text"><b>Fe. Hr. Entrega</b>: 19/07/2019 08:00 AM</p>
-                                <p class="card-text"><b>P. Partida:</b> INVERSIONES MARITIMAS UNIVERSALES S.A.</p>
-                                <p class="card-text"><b>P. Llegada:</b> DEP</p>    
-                            </a>                        
-                        </div>
-                    </div>
-                </div>
+            <div class="row _viajes">
             </div>
         </div>
     </section>
@@ -98,6 +58,77 @@
 	<script type="text/javascript" src="assets/js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="assets/js/bootstrap-better-nav.min.js"></script>
     <script type="text/javascript" src="assets/bootstrap/js/bootstrap.min.js"></script>	
+    <script src="assets/js/validate.js"></script>
+
+
+    <script type="text/javascript">
+        function loadViajesPorRealizar(){
+            $("#loading").show();
+            var _session = localStorage.getItem("session");
+            _session = JSON.parse(_session);
+            var _url = 'http://localhost/transporte/tool/api/viajes-chofer.php?c='+_session.id+'&e=03&token=b8507948000cf84378aee2a877fbfaff';
+            $.ajax({
+                method: "POST",
+                url: _url,
+                dataType: "json",
+                encoding:"UTF-8",
+                success: function(data){
+                    var total = data.data.length;
+                    var items = data.data;
+                    if(total != 0){
+                        $("._viajes").html("");
+                        for (var i = 0; i < total; i++) {
+                            $("._viajes").append('<div class="col-md" style="margin-bottom: 20px;">\n'+
+                                    '<div class="card card_cli_pendient">\n'+
+                                        '<div class="card-body">\n'+
+                                            '<a href="#" class="view-viaje" data-viaje="'+items[i].viaje+'">\n'+
+                                                '<h5 class="card-title">Nro Orden: <span class="_orden">'+items[i].orden+'</span></h5>\n'+
+                                                '<p class="card-text"><b>Cliente</b>: '+items[i].cliente+'</p>\n'+
+                                                '<p class="card-text"><b>Fe. Hr. Entrega</b>: '+items[i].fecha+'</p>\n'+
+                                                '<p class="card-text"><b>P. Partida:</b> '+items[i].partida+'</p>\n'+
+                                                '<p class="card-text"><b>P. Llegada:</b> '+items[i].llegada+'</p>\n'+
+                                            '</a>\n'+
+                                        '</div>\n'+
+                                    '</div>\n'+
+                                '</div>');
+                        }
+                        $("#loading").hide();
+                    }else{
+                        $("._viajes").html("");
+                        $("._viajes").append('<div class="col-md" style="margin-bottom: 20px;">\n'+
+                                    '<div class="card card_cli_pendient">\n'+
+                                        '<div class="card-body">\n'+
+                                            '<span>No hay viajes registrados...</span>\n'+
+                                        '</div>\n'+
+                                    '</div>\n'+
+                                '</div>');
+                        $("#loading").hide();
+                    }
+                }
+                
+            });
+        }
+
+        loadViajesPorRealizar();
+
+
+        $(document).on('click', '.view-viaje', function (e) {
+            e.preventDefault();
+            var _viaje = $(this).attr("data-viaje");
+            var _orden = $(this).find("._orden").html();
+            var _session = localStorage.getItem("session");
+            _session = JSON.parse(_session);
+            var _id = _session.id;
+            // console.log(_session.id);
+            var _viajeDatos = { 'orden': _orden, 'viaje': _viaje, 'chofer': _id };
+            localStorage.setItem('viaje', JSON.stringify(_viajeDatos));
+            location.href='detalle-viaje.html';
+        });
+
+
+    </script>
+
+
 
 </body>
 </html>

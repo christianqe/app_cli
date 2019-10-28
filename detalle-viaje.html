@@ -8,9 +8,11 @@
 	<link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
 	<link rel="stylesheet" type="text/css" href="assets/css/bootstrap-better-nav.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/fontawesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/sweetalert-master/dist/sweetalert.css" type="text/css">
 </head>
 <body class="" style="background: #EEEEEF;">
-
+    <div id="loading"><div id="msg"><i class="fa fa-circle-o-notch fa-spin"></i></div></div>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="mainNav">
         <div class="container">
@@ -45,7 +47,7 @@
                 </div>
                 <div class="col-md">
                     <legend class="text-center"><strong>Detalle de viaje </strong></legend>
-                    <legend class="" style="font-size: 20px;">Nro Orden:  19/61003934 - Viaje 1</legend>
+                    <legend class="" style="font-size: 20px;">Nro Orden:  <span class="_orden"></span> - Viaje <span class="_viaje"></span></legend>
                 </div>
             </div>
         </div>
@@ -65,7 +67,7 @@
                                 </thead>
                                 <tbody>
                                     <tr class="text-center">
-                                        <td>Fe y Hr: 19/07/2019 8:00 AM</td>
+                                        <td class="item-1"></td>
                                     </tr>    
                                 </tbody>
                             </table>
@@ -78,7 +80,7 @@
                                 </thead>
                                 <tbody>
                                     <tr class="text-center">
-                                        <td><a href="#" class="btn btn-success" style="color: #fff;">asignar fecha y hora</a></td>
+                                        <td class="item-2"></td>
                                     </tr>    
                                 </tbody>
                             </table>
@@ -91,7 +93,7 @@
                                 </thead>
                                 <tbody>
                                     <tr class="text-center">
-                                        <td><a href="#" class="btn btn-success" style="color: #fff;">asignar fecha y hora</a></td>
+                                        <td class="item-3"></td>
                                     </tr>    
                                 </tbody>
                             </table>
@@ -104,7 +106,7 @@
                                 </thead>
                                 <tbody>
                                     <tr class="text-center">
-                                        <td><a href="#" class="btn btn-success" style="color: #fff;">asignar fecha y hora</a></td>
+                                        <td class="item-4"></td>
                                     </tr>    
                                 </tbody>
                             </table>
@@ -122,7 +124,7 @@
                                 </thead>
                                 <tbody>
                                     <tr class="text-center">
-                                        <td>Fe y Hr: 19/07/2019 12:00 PM</td>
+                                        <td class="item-5"></td>
                                     </tr>    
                                 </tbody>
                             </table>
@@ -135,7 +137,7 @@
                                 </thead>
                                 <tbody>
                                     <tr class="text-center">
-                                        <td><a href="#" class="btn btn-success" style="color: #fff;">asignar fecha y hora</a></td>
+                                        <td class="item-6"></td>
                                     </tr>    
                                 </tbody>
                             </table>
@@ -148,7 +150,7 @@
                                 </thead>
                                 <tbody>
                                     <tr class="text-center">
-                                        <td><a href="#" class="btn btn-success" style="color: #fff;">asignar fecha y hora</a></td>
+                                        <td class="item-7"></td>
                                     </tr>    
                                 </tbody>
                             </table>
@@ -161,7 +163,7 @@
                                 </thead>
                                 <tbody>
                                     <tr class="text-center">
-                                        <td><a href="#" class="btn btn-success" style="color: #fff;">asignar fecha y hora</a></td>
+                                        <td class="item-8"></td>
                                     </tr>    
                                 </tbody>
                             </table>
@@ -174,7 +176,120 @@
 
 	<script type="text/javascript" src="assets/js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="assets/js/bootstrap-better-nav.min.js"></script>
-    <script type="text/javascript" src="assets/bootstrap/js/bootstrap.min.js"></script>	
+    <script type="text/javascript" src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/sweetalert-master/dist/sweetalert-dev.js"></script>
+    <script src="assets/js/validate.js"></script>
+
+    <script type="text/javascript">
+        function loadDetalleViaje(){
+            $("#loading").show();
+            var _viaje = localStorage.getItem("viaje");
+            _viaje = JSON.parse(_viaje);
+            console.log(_viaje);
+            $("._orden").html(_viaje.orden);
+            $("._viaje").html(_viaje.viaje);
+            
+            var _url = 'http://localhost/transporte/tool/api/detalle-viaje.php?o='+_viaje.orden+'&v='+_viaje.viaje+'&c='+_viaje.chofer+'&e=03&token=b8507948000cf84378aee2a877fbfaff';
+            $.ajax({
+                method: "POST",
+                url: _url,
+                dataType: "json",
+                encoding:"UTF-8",
+                success: function(data){
+                    var detalle = data.data;
+                    console.log(detalle.pt_entrega);
+                    if(detalle.pto_partida != ''){
+                        $(".item-1").html(detalle.pto_partida);
+                    }else{
+                        $(".item-1").html('<a href="#" class="btn btn-success btn_marcar" data-tipo = "1" style="color: #fff;">asignar fecha y hora</a>');
+                    }
+
+                    if(detalle.ini_carga != ''){
+                        $(".item-2").html(detalle.ini_carga);
+                    }else{
+                        $(".item-2").html('<a href="#" class="btn btn-success btn_marcar" data-tipo = "2" style="color: #fff;">asignar fecha y hora</a>');
+                    }
+
+                    if(detalle.fin_carga != ''){
+                        $(".item-3").html(detalle.fin_carga);
+                    }else{
+                        $(".item-3").html('<a href="#" class="btn btn-success btn_marcar" data-tipo = "3" style="color: #fff;">asignar fecha y hora</a>');
+                    }
+
+                    if(detalle.sal_carga != ''){
+                        $(".item-4").html(detalle.sal_carga);
+                    }else{
+                        $(".item-4").html('<a href="#" class="btn btn-success btn_marcar" data-tipo = "4" style="color: #fff;">asignar fecha y hora</a>');
+                    }
+
+                    if(detalle.pt_entrega != ''){
+                        $(".item-5").html(detalle.pt_entrega);
+                    }else{
+                        $(".item-5").html('<a href="#" class="btn btn-success btn_marcar" data-tipo = "5" style="color: #fff;">asignar fecha y hora</a>');
+                    }
+
+                    if(detalle.ini_descarga != ''){
+                        $(".item-6").html(detalle.ini_descarga);
+                    }else{
+                        $(".item-6").html('<a href="#" class="btn btn-success btn_marcar" data-tipo = "6" style="color: #fff;">asignar fecha y hora</a>');
+                    }
+
+                    if(detalle.fin_descarga != ''){
+                        $(".item-7").html(detalle.fin_descarga);
+                    }else{
+                        $(".item-7").html('<a href="#" class="btn btn-success btn_marcar" data-tipo = "7" style="color: #fff;">asignar fecha y hora</a>');
+                    }
+
+                    if(detalle.sal_descarga != ''){
+                        $(".item-8").html(detalle.sal_descarga);
+                    }else{
+                        $(".item-8").html('<a href="#" class="btn btn-success btn_marcar" data-tipo = "8" style="color: #fff;">asignar fecha y hora</a>');
+                    }
+
+                    $("#loading").hide();
+                }
+                
+            });
+        }
+
+        loadDetalleViaje();
+
+
+        $(document).on('click', '.btn_marcar', function (e) {
+            e.preventDefault();
+            var _tipo = $(this).attr("data-tipo");
+            var _viaje = localStorage.getItem("viaje");
+            _viaje = JSON.parse(_viaje);
+
+            swal({
+                title: "<h4>¿Esta seguro que desea registrar la fecha y hora?</h4>",
+                text: "",
+                type: "info",
+                html: true,
+                showCancelButton: true,
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true
+            }, function () {
+                var _url = 'http://localhost/transporte/tool/api/actualizar-viaje-chofer.php?o='+_viaje.orden+'&v='+_viaje.viaje+'&c='+_viaje.chofer+'&t='+_tipo+'&e=03&token=b8507948000cf84378aee2a877fbfaff';
+                $.ajax({
+                    method: "POST",
+                    url: _url,
+                    dataType: "json",
+                    encoding:"UTF-8",
+                    success: function(data){
+                        if(data.code == 200){
+                            loadDetalleViaje();
+                            swal.close();
+                        }
+                    }                    
+                });
+
+            });
+        });
+
+
+
+    </script>
 
 </body>
 </html>

@@ -7,6 +7,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
+    <link rel="stylesheet" href="assets/sweetalert-master/dist/sweetalert.css" type="text/css">
 </head>
 <body class="panel-login">
 
@@ -14,7 +16,7 @@
         <div class="login-box-body" style="background: #fff;">
         	<span><img src="assets/images/logo-cli.png" class="img-fluid" style="width: 60%;"></span>
             <legend class="text-center"><strong>Seguimiento de Transportes</strong></legend>
-            <form action="viajes-por-realizar.html" method="POST" class="form">
+            <!-- <form action="viajes-por-realizar.html" method="POST" class="form"> -->
                 <span class="response"></span>
                 <div class="form-group">
                     <input type="text" class="form-control input-login" name="usuario" placeholder="Usuario" required>
@@ -27,18 +29,23 @@
                 <div class=" text-center">
                     <div class="row">
                         <div class="col-md-12">
-                            <button class="btn btn-success btn-comenzar save"> Ingresar</button>   
+                            <button class="btn btn-success btn-comenzar save btn-login"> Ingresar</button>   
                         </div>
-                    </div>                   
+                    </div>
                 </div>
-            </form>
+            <!-- </form> -->
         </div>
     </div>
 	
 
 
 	<script type="text/javascript" src="assets/js/jquery-3.3.1.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> -->
+    <script src="assets/js/main.js"></script>
+    <!-- <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script> -->
     <script type="text/javascript" src="assets/bootstrap/js/bootstrap.min.js"></script>
-	<script src="phonegap.js"></script>
+    <script src="assets/sweetalert-master/dist/sweetalert-dev.js"></script>
+
+	<!-- <script src="phonegap.js"></script> -->
 </body>
 </html>
